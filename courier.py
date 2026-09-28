@@ -1,5 +1,6 @@
 import random
 import string
+import allure
 
 import requests
 
@@ -21,6 +22,7 @@ def generate_courier_data():
     }
 
 # Создаёт нового курьера. Возвращает: данные курьера, id курьера
+@allure.step("Создание нового курьера")
 def register_courier():
     
     courier = generate_courier_data()
@@ -39,6 +41,7 @@ def register_courier():
     return courier
 
 # Удаляет курьера по id.
+@allure.step("Удаление курьера")
 def delete_courier(courier_id):
     
     response = requests.delete(
