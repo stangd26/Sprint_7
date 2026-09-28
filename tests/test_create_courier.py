@@ -29,7 +29,7 @@ class TestCreateCourier:
 
         # Удаляем созданного курьера.
         login_response = requests.post(
-            f"{BASE_URL}/api/v1/courier/login",
+            f"{BASE_URL}{COURIER_LOGIN_ENDPOINT}",
             data={
                 "login": courier["login"],
                 "password": courier["password"]
@@ -65,7 +65,7 @@ class TestCreateCourier:
         assert COURIER_DUPLICATE_ERROR in second_response.text
 
         login_response = requests.post(
-            f"{BASE_URL}/api/v1/courier/login",
+            f"{BASE_URL}{COURIER_LOGIN_ENDPOINT}",
             data={
                 "login": courier["login"],
                 "password": courier["password"]
