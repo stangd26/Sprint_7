@@ -4,7 +4,7 @@ import allure
 
 import requests
 
-from data import BASE_URL, COURIER_CREATE_ENDPOINT
+from data import BASE_URL, COURIER_CREATE_ENDPOINT, COURIER_LOGIN_ENDPOINT
 
 # Генерирует случайную строку из строчных латинских букв.
 def generate_random_string(length=10):
@@ -41,7 +41,7 @@ def register_courier():
     return courier
 
 # Удаляет курьера по id.
-@allure.step("Удаление курьера")
+@allure.step("Удаление курьера по id")
 def delete_courier(courier_id):
     
     response = requests.delete(
@@ -49,3 +49,20 @@ def delete_courier(courier_id):
     )
 
     return response
+
+@allure.step("Удаление курьера по учетным данным")
+def delete_courier_by_credentials(login, password):
+    login_response = requests.post(
+        f"{BASE_URL}{COURIER_LOGIN_ENDPOINT}",
+        data={
+            "login": login,
+            "password": password
+        }
+    )
+
+    if login_response.status_code == 200:
+        courier_id = login_response.json().get("id")
+        if courier_id:
+            return delete_courier(courier_id)
+
+    return None

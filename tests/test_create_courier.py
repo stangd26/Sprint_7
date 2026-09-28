@@ -4,7 +4,6 @@ import requests
 from data import (
     BASE_URL,
     COURIER_CREATE_ENDPOINT,
-    COURIER_LOGIN_ENDPOINT,
     COURIER_DUPLICATE_ERROR,
     COURIER_REQUIRED_FIELDS_ERROR,
 )
@@ -16,9 +15,9 @@ from courier import generate_courier_data
 class TestCreateCourier:
 
     @allure.title("Можно создать нового курьера")
-    def test_create_courier_success(self):
+    def test_create_courier_success(self, cleanup_courier):
         courier = generate_courier_data()
-
+        cleanup_courier.append(courier)
         response = requests.post(
             f"{BASE_URL}{COURIER_CREATE_ENDPOINT}",
             data=courier
@@ -27,27 +26,11 @@ class TestCreateCourier:
         assert response.status_code == 201
         assert response.json() == {"ok": True}
 
-        # Удаляем созданного курьера.
-        login_response = requests.post(
-            f"{BASE_URL}{COURIER_LOGIN_ENDPOINT}",
-            data={
-                "login": courier["login"],
-                "password": courier["password"]
-            }
-        )
-
-        courier_id = login_response.json()["id"]
-
-        delete_response = requests.delete(
-            f"{BASE_URL}{COURIER_CREATE_ENDPOINT}/{courier_id}"
-        )
-
-        assert delete_response.status_code == 200
-
+        
     @allure.title("Нельзя создать двух одинаковых курьеров")
-    def test_create_two_identical_couriers(self):
+    def test_create_two_identical_couriers(self, cleanup_courier):
         courier = generate_courier_data()
-
+        cleanup_courier.append(courier)
         first_response = requests.post(
             f"{BASE_URL}{COURIER_CREATE_ENDPOINT}",
             data=courier
@@ -64,21 +47,6 @@ class TestCreateCourier:
         assert second_response.status_code == 409
         assert COURIER_DUPLICATE_ERROR in second_response.text
 
-        login_response = requests.post(
-            f"{BASE_URL}{COURIER_LOGIN_ENDPOINT}",
-            data={
-                "login": courier["login"],
-                "password": courier["password"]
-            }
-        )
-
-        courier_id = login_response.json()["id"]
-
-        delete_response = requests.delete(
-            f"{BASE_URL}{COURIER_CREATE_ENDPOINT}/{courier_id}"
-        )
-
-        assert delete_response.status_code == 200
 
     @allure.title("Нельзя создать курьера без обязательного поля login")
     def test_create_courier_without_login(self):
@@ -107,10 +75,10 @@ class TestCreateCourier:
         assert COURIER_REQUIRED_FIELDS_ERROR in response.text
 
     @allure.title("Можно создать курьера без firstName")
-    def test_create_courier_without_first_name(self):
+    def test_create_courier_without_first_name(self, cleanup_courier):
         courier = generate_courier_data()
         courier.pop("firstName")
-
+        cleanup_courier.append(courier)
         response = requests.post(
             f"{BASE_URL}{COURIER_CREATE_ENDPOINT}",
             data=courier
@@ -118,21 +86,3 @@ class TestCreateCourier:
 
         assert response.status_code == 201
         assert response.json() == {"ok": True}
-
-        login_response = requests.post(
-            f"{BASE_URL}{COURIER_LOGIN_ENDPOINT}",
-            data={
-                "login": courier["login"],
-                "password": courier["password"]
-            }
-        )
-
-        assert login_response.status_code == 200
-
-        courier_id = login_response.json()["id"]
-
-        delete_response = requests.delete(
-            f"{BASE_URL}{COURIER_CREATE_ENDPOINT}/{courier_id}"
-        )
-
-        assert delete_response.status_code == 200

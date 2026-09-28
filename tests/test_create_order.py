@@ -26,12 +26,17 @@ class TestCreateOrder:
         ]
     )
     @allure.title("Создание заказа с разными вариантами цвета")
-    def test_create_order_with_different_colors(self, order_data):
+    def test_create_order_with_different_colors(self, order_data, cleanup_orders):
         response = requests.post(
             f"{BASE_URL}{ORDERS_ENDPOINT}",
             json=order_data
         )
 
         assert response.status_code == 201
+
+        track = response.json()["track"]
+        cleanup_orders.append(track)
+
         assert "track" in response.json()
-        assert isinstance(response.json()["track"], int)
+        assert isinstance(track, int)
+        

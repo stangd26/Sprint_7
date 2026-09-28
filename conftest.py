@@ -4,8 +4,9 @@ import requests
 from data import (
     BASE_URL,
     COURIER_LOGIN_ENDPOINT,
+    ORDER_CANCEL_ENDPOINT
 )
-from courier import register_courier, delete_courier
+from courier import register_courier, delete_courier, delete_courier_by_credentials
 
 # Создаёт уникального курьера перед тестом. После теста пытается авторизоваться под ним, получить id и удалить курьера.
 @pytest.fixture
@@ -57,3 +58,29 @@ def registered_courier():
     }
 
     delete_courier(courier_id)
+
+# Очистка курьера по учетным данным
+@pytest.fixture
+def cleanup_courier():
+    couriers = []
+
+    yield couriers
+
+    for courier in couriers:
+        delete_courier_by_credentials(
+            courier["login"],
+            courier["password"]
+        )
+
+# Отмена заказов
+@pytest.fixture
+def cleanup_orders():
+    tracks = []
+
+    yield tracks
+
+    for track in tracks:
+        requests.put(
+            f"{BASE_URL}{ORDER_CANCEL_ENDPOINT}",
+            params={"track": track}
+        )

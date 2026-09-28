@@ -3,6 +3,7 @@ BASE_URL = "https://qa-scooter.praktikum-services.ru"
 COURIER_CREATE_ENDPOINT = "/api/v1/courier"
 COURIER_LOGIN_ENDPOINT = "/api/v1/courier/login"
 ORDERS_ENDPOINT = "/api/v1/orders"
+ORDER_CANCEL_ENDPOINT = "/api/v1/orders/cancel"
 
 # Данные для заказа
 ORDER_DATA = {
@@ -24,5 +25,5 @@ BOTH_COLORS = ["BLACK", "GREY"]
 COURIER_DUPLICATE_ERROR = "Этот логин уже используется"
 COURIER_REQUIRED_FIELDS_ERROR = "Недостаточно данных для создания учетной записи"
 LOGIN_REQUIRED_FIELDS_ERROR = "Недостаточно данных для входа"
-SERVICE_UNAVAILABLE = "Service unavailable"
 LOGIN_INVALID_ERROR = "Учетная запись не найдена"
+SERVICE_UNAVAILABLE = "Service unavailable"
