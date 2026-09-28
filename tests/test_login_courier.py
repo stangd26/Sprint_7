@@ -5,6 +5,7 @@ from data import (
     BASE_URL,
     COURIER_LOGIN_ENDPOINT,
     LOGIN_REQUIRED_FIELDS_ERROR,
+    SERVICE_UNAVAILABLE,
     LOGIN_INVALID_ERROR,
 )
 
@@ -49,7 +50,7 @@ class TestLoginCourier:
         )
 
         assert response.status_code == 504
-        
+        assert SERVICE_UNAVAILABLE in response.text
 
     @allure.title("Ошибка при неправильном login")
     def test_login_with_wrong_login(self, courier):
