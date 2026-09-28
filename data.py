@@ -27,3 +27,10 @@ COURIER_REQUIRED_FIELDS_ERROR = "Недостаточно данных для с
 LOGIN_REQUIRED_FIELDS_ERROR = "Недостаточно данных для входа"
 LOGIN_INVALID_ERROR = "Учетная запись не найдена"
 SERVICE_UNAVAILABLE = "Service unavailable"
+
+#Данные для негативных проверок логина
+WRONG_LOGIN = "wrong_login"
+WRONG_PASSWORD = "wrong_password"
+
+NONEXISTENT_LOGIN = "nonexistent_login"
+NONEXISTENT_PASSWORD = "nonexistent_password"

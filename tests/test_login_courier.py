@@ -7,6 +7,10 @@ from data import (
     LOGIN_REQUIRED_FIELDS_ERROR,
     SERVICE_UNAVAILABLE,
     LOGIN_INVALID_ERROR,
+    WRONG_LOGIN,
+    WRONG_PASSWORD,
+    NONEXISTENT_LOGIN,
+    NONEXISTENT_PASSWORD,
 )
 
 
@@ -57,7 +61,7 @@ class TestLoginCourier:
         response = requests.post(
             f"{BASE_URL}{COURIER_LOGIN_ENDPOINT}",
             data={
-                "login": "wrong_login",
+                "login": WRONG_LOGIN,
                 "password": courier["password"]
             }
         )
@@ -71,7 +75,7 @@ class TestLoginCourier:
             f"{BASE_URL}{COURIER_LOGIN_ENDPOINT}",
             data={
                 "login": courier["login"],
-                "password": "wrong_password"
+                "password": WRONG_PASSWORD
             }
         )
 
@@ -83,8 +87,8 @@ class TestLoginCourier:
         response = requests.post(
             f"{BASE_URL}{COURIER_LOGIN_ENDPOINT}",
             data={
-                "login": "nonexistent_login",
-                "password": "nonexistent_password"
+                "login": NONEXISTENT_LOGIN,
+                "password": NONEXISTENT_PASSWORD
             }
         )
 
