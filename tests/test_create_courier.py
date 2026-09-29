@@ -15,12 +15,11 @@ from courier import generate_courier_data
 class TestCreateCourier:
 
     @allure.title("Можно создать нового курьера")
-    def test_create_courier_success(self, cleanup_courier):
-        courier = generate_courier_data()
-        cleanup_courier.append(courier)
+    def test_create_courier_success(self, created_courier):
+        
         response = requests.post(
             f"{BASE_URL}{COURIER_CREATE_ENDPOINT}",
-            data=courier
+            data=created_courier
         )
 
         assert response.status_code == 201
@@ -28,12 +27,11 @@ class TestCreateCourier:
 
         
     @allure.title("Нельзя создать двух одинаковых курьеров")
-    def test_create_two_identical_couriers(self, cleanup_courier):
-        courier = generate_courier_data()
-        cleanup_courier.append(courier)
+    def test_create_two_identical_couriers(self, created_courier):
+        
         first_response = requests.post(
             f"{BASE_URL}{COURIER_CREATE_ENDPOINT}",
-            data=courier
+            data=created_courier
         )
 
         assert first_response.status_code == 201
@@ -41,7 +39,7 @@ class TestCreateCourier:
 
         second_response = requests.post(
             f"{BASE_URL}{COURIER_CREATE_ENDPOINT}",
-            data=courier
+            data=created_courier
         )
 
         assert second_response.status_code == 409
@@ -75,10 +73,10 @@ class TestCreateCourier:
         assert COURIER_REQUIRED_FIELDS_ERROR in response.text
 
     @allure.title("Можно создать курьера без firstName")
-    def test_create_courier_without_first_name(self, cleanup_courier):
-        courier = generate_courier_data()
+    def test_create_courier_without_first_name(self, created_courier):
+        courier = created_courier.copy()
         courier.pop("firstName")
-        cleanup_courier.append(courier)
+        
         response = requests.post(
             f"{BASE_URL}{COURIER_CREATE_ENDPOINT}",
             data=courier
